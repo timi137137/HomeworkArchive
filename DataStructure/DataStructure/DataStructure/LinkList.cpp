@@ -99,7 +99,7 @@ status InsertElement(LinkList& List, int index, int input) {
 	return OK;
 }
 
-status DeleteElement(LinkList& List, int index) {
+status DeleteElement(LinkList& List, int index, int& Length) {
 	int i;
 	LinkList list = List;
 
@@ -112,6 +112,7 @@ status DeleteElement(LinkList& List, int index) {
 	LinkList Temp = list->next;
 	list->next = Temp->next;
 	delete Temp;
+	Length -= 1;
 
 	return OK;
 }
@@ -127,18 +128,18 @@ bool SearchElement(LinkList& List, int input) {
 	return true;
 }
 
-status SearchMaximumElement(LinkList& List, int input) {
+status SearchMaximumElement(LinkList& List) {
 	int max = 0;
 	LNode* list;
 	list = List;
-	while (list->next != NULL)
+	do
 	{
 		if (list->value > max) {
 			max = list->value;
 		}
 
 		list = list->next;
-	}
+	} while (list && list->value != NULL);
 	cout << "链表中最大的值为：" << max;
 	return OK;
 }
@@ -165,9 +166,59 @@ int main() {
 	system("pause");
 	#pragma endregion
 
-	system("cls");
-	cout << "请选择功能: \n 1. 查询元素位置 \n 2. 查询元素是否存在 \n 3. 查找最大值 \n 4. 在指定位置新增元素 \n 5. 删除指定元素" << endl;
-	cin >> Feature;
+	#pragma region -- Select --
+
+	while (true)
+	{
+		system("cls");
+		cout << "请选择功能: \n 1. 查询元素位置 \n 2. 查询元素是否存在 \n 3. 查找最大值 \n 4. 在指定位置新增元素 \n 5. 删除指定元素 \n 9. 退出" << endl;
+		cout << "您输入的是: ";
+		cin >> Feature;
+
+		switch (Feature)
+		{
+		case 1:
+			cout << "请输入要寻找的元素位置:" << endl;
+			cin >> Number1;
+			GetElement(List, Number1);
+			cout << endl;
+			break;
+		case 2:
+			cout << "请输入要寻找的元素:" << endl;
+			cin >> SearchNumber;
+			cout << "您要查找的元素" << (SearchElement(List, SearchNumber) ? "存在" : "不存在") << endl;
+			break;
+		case 3:
+			SearchMaximumElement(List);
+			cout << endl;
+			break;
+		case 4:
+			int element;
+			cout << "请输入要添加的元素:" << endl;
+			cin >> element;
+			cout << "请输入要插入的位置:" << endl;
+			cin >> Number1;
+			InsertElement(List, Number1, element);
+			PrintList(List, Length);
+			break;
+		case 5:
+			cout << "请输入要删除的元素位置:" << endl;
+			cin >> Number1;
+			DeleteElement(List, Number1, Length);
+			PrintList(List, Length);
+			break;
+		case 9:
+			return 0;
+		default:
+			cout << "输入的功能有误，请重新输入：" << endl;
+			break;
+		}
+
+		system("pause");
+	}
+
+	#pragma endregion
+
 
 	return 0;
 }
