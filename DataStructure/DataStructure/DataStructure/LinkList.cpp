@@ -148,7 +148,7 @@ status SearchMaximumElement(LinkList& List) {
 
 #pragma region -- Main --
 
-int main() {
+int main1() {
 	LinkList List;
 	int Length, Feature, Number1, SearchNumber;
 
