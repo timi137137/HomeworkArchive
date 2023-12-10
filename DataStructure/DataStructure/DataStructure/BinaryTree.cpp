@@ -95,7 +95,7 @@ int GetLeafNode(Tree tree) {
 
 #pragma region -- Main --
 
-int main() {
+int main2() {
 	Tree BinaryTree;
 
 	CreateTree(BinaryTree);

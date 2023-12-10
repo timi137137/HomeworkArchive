@@ -1,227 +1,142 @@
-#include <iostream>
-
-using namespace std;
-
-#pragma region -- Define --
-
-#define OK 1;
-#define ERROR -1;
-#define OVERFLOW -2;
-
-typedef int status;
-
-/// <summary>
-/// Link List Node 
-/// </summary>
-typedef struct LNode {
-	int value; // Node Value
-	struct LNode* next; // Next Node
-} LNode, *LinkList;
-
-#pragma endregion
+#include "LinkList.h"
 
 #pragma region -- Functions --
-
-status InitList(LinkList& List) {
-	List = new LNode;
-	List->next = NULL;
-	return OK;
+// 构造函数
+LinkList::LinkList()
+{
+	head = new LinkNode;
+	head->next = nullptr;
 }
 
-status CreateList (LinkList& List, int Length) {
-	InitList(List);
-	if (List == NULL) return OVERFLOW;
-
-	int i, input;
-	LNode* previous;
-	LNode* node;
-
-	previous = List;
-	for (i = 0; i < Length; i++) {
-		cin >> input;
-		node = new LNode;
-		if (node == NULL) return OVERFLOW;
-
-		node->next = NULL;
-		node->value = input;
-		previous->next = node;
-		previous = node;
-	}
-	return OK;
+// 析构函数
+LinkList::~LinkList()
+{
+	delete head;
+	head = nullptr;
 }
 
-status PrintList(LinkList List, int Length) {
-	for (int i = 0; i < Length; i++) {
-		List = List->next;
-		cout << List->value << " -> ";
-	}
-	cout << "NULL" << endl;
-	return OK;
+// 判断是否为空操作
+bool LinkList::isEmpty()
+{
+	return head == nullptr ? true : false;
 }
 
-status GetListLength(LinkList List) {
-	int i = 0;
+// 获取链表长度操作
+int LinkList::getLength()
+{
+	int count = 0;
+	LinkNode* temp = head->next;
 
-	while (List->next != NULL)
+	while (temp != nullptr)
 	{
-		List = List->next;
-		i++;
+		count++;
+		temp = temp->next;
 	}
-	cout << "链表长度为：" << i;
-	return OK;
+
+	return count;
 }
 
-status GetElement(LinkList& List, int index) {
+// 获取元素操作
+bool LinkList::getElement(int index, ElementType* element)
+{
+	LinkNode* temp = head->next;
+
+	if (temp == nullptr || index < 0 || index > getLength()) return false;
+
 	for (int i = 0; i < index; i++) {
-		List = List->next;
+		temp = temp->next;
 	}
-	cout << List->value;
-	return OK;
+	*element = temp->value;
+	return true;
+}
+int LinkList::getElement(int index)
+{
+	LinkNode* temp = head->next;
+
+	if (temp == nullptr || index < 0 || index > getLength()) return -1;
+
+	for (int i = 0; i < index; i++) {
+		temp = temp->next;
+	}
+	return temp->value;
 }
 
-status InsertElement(LinkList& List, int index, int input) {
-	if (index < 1) return OVERFLOW;
-	
-	int i;
-	LinkList list = List;
+// 新增元素操作
+bool LinkList::appendList(const ElementType element)
+{
+	if (head == nullptr) return false;
 
-	for (i = 1; list && i < index; i++) {
-		list = list->next;
-	}
-
-	if (!list || i > index) return ERROR;
-
-	LinkList temp = new LNode;
-	temp->value = input;
-	temp->next = list->next;
-	list->next = temp;
-
-	return OK;
-}
-
-status DeleteElement(LinkList& List, int index, int& Length) {
-	int i;
-	LinkList list = List;
-
-	for (i = 0; list->next && i < index - 1; ++i) {
-		list = list->next;
-	}
-
-	if (!list->next || i > index - 1) return OVERFLOW;
-
-	LinkList Temp = list->next;
-	list->next = Temp->next;
-	delete Temp;
-	Length -= 1;
-
-	return OK;
-}
-
-bool SearchElement(LinkList& List, int input) {
-	LNode* list;
-	list = List;
-	while (list->value != input && list->next != NULL)
+	LinkNode* per = head;
+	for (int i = 0; i < getLength(); i++)
 	{
-		list = list->next;
-		if (list->next == NULL) return false;
+		per = per->next;
 	}
+	LinkNode* newNode = new LinkNode;
+	newNode->value = element;
+	newNode->next = nullptr;
+	per->next = newNode;
+
 	return true;
 }
 
-status SearchMaximumElement(LinkList& List) {
-	int max = 0;
-	LNode* list;
-	list = List;
-	do
-	{
-		if (list->value > max) {
-			max = list->value;
-		}
+// 插入元素操作
+bool LinkList::insertList(int index, const ElementType element)
+{
+	if (index < 0 || index > getLength()) return false;
 
-		list = list->next;
-	} while (list && list->value != NULL);
-	cout << "链表中最大的值为：" << max;
-	return OK;
+	LinkNode* per = head;
+	for (int i = 0; i < index; i++)
+	{
+		per = per->next;
+	}
+	LinkNode* newNode = new LinkNode;
+	newNode->value = element;
+	newNode->next = per->next;
+	per->next = newNode;
+
+	return true;
 }
 
-#pragma endregion
+// 删除元素操作
+bool LinkList::deleteList(int index, ElementType* element)
+{
+	if (index < 0 || index > getLength()) return false;
 
-#pragma region -- Main --
-
-int main1() {
-	LinkList List;
-	int Length, Feature, Number1, SearchNumber;
-
-	#pragma region -- Init --
-	cout << "请输入链表的长度: " << endl;
-	cin >> Length;
-	cout << "请输入元素并回车，重复该操作以创建链表：" << endl;
-	CreateList(List, Length);
-	system("cls");
-	cout << "创建的链表为: " << endl;
-	PrintList(List, Length);
-	cout << endl;
-	GetListLength(List);
-	cout << endl;
-	system("pause");
-	#pragma endregion
-
-	#pragma region -- Select --
-
-	while (true)
+	LinkNode* per = head;
+	for (int i = 0; i < index; i++)
 	{
-		system("cls");
-		cout << "请选择功能: \n 1. 查询元素位置 \n 2. 查询元素是否存在 \n 3. 查找最大值 \n 4. 在指定位置新增元素 \n 5. 删除指定元素 \n 9. 退出" << endl;
-		cout << "您输入的是: ";
-		cin >> Feature;
+		per = per->next;
+	}
+	LinkNode* temp = per->next;
+	per->next = per->next->next;
+	delete temp;
 
-		switch (Feature)
-		{
-		case 1:
-			cout << "请输入要寻找的元素位置:" << endl;
-			cin >> Number1;
-			GetElement(List, Number1);
-			cout << endl;
-			break;
-		case 2:
-			cout << "请输入要寻找的元素:" << endl;
-			cin >> SearchNumber;
-			cout << "您要查找的元素" << (SearchElement(List, SearchNumber) ? "存在" : "不存在") << endl;
-			break;
-		case 3:
-			SearchMaximumElement(List);
-			cout << endl;
-			break;
-		case 4:
-			int element;
-			cout << "请输入要添加的元素:" << endl;
-			cin >> element;
-			cout << "请输入要插入的位置:" << endl;
-			cin >> Number1;
-			InsertElement(List, Number1, element);
-			PrintList(List, Length);
-			break;
-		case 5:
-			cout << "请输入要删除的元素位置:" << endl;
-			cin >> Number1;
-			DeleteElement(List, Number1, Length);
-			PrintList(List, Length);
-			break;
-		case 9:
-			return 0;
-		default:
-			cout << "输入的功能有误，请重新输入：" << endl;
-			break;
-		}
+	return true;
+}
 
-		system("pause");
+// 清空链表操作
+bool LinkList::clearList()
+{
+	while (head->next != NULL)
+	{
+		LinkNode* node = head->next;
+		head->next = head->next->next;
+		delete node;
 	}
 
-	#pragma endregion
-
-
-	return 0;
+	return true;
 }
 
-#pragma endregion
+// 遍历链表
+void LinkList::printList()
+{
+	LinkNode* temp = head;
+	while (temp->next != nullptr)
+	{
+		temp = temp->next;
+		std::cout << temp->value << " -> ";
+	}
 
+	std::cout << "NULL" << std::endl;
+}
+#pragma endregion

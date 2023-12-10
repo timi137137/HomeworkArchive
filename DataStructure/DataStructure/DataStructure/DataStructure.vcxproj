@@ -130,6 +130,13 @@
     <ClCompile Include="BinaryTree.cpp" />
     <ClCompile Include="DataStructure.cpp" />
     <ClCompile Include="LinkList.cpp" />
+    <ClCompile Include="LinkListDemo.cpp" />
+    <ClCompile Include="Search.cpp" />
+    <ClCompile Include="SequenceList.cpp" />
+    <ClCompile Include="SequenceList.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="LinkList.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
