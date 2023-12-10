@@ -81,11 +81,6 @@ int BinarySearch(SeqList& seqList, int element) {
 	return 0;
 }
 
-status HashSearch() {
-	return 0;
-}
-
-
 #pragma endregion
 
 #pragma region -- Main --
