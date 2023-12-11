@@ -8,6 +8,7 @@
 	class SeqList {
 	public:
 		SeqList(int size = 0);
+		SeqList(const SeqList &seqList);
 		~SeqList();
 
 		bool isEmpty();

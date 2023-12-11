@@ -8,12 +8,22 @@ SeqList::SeqList(int size)
 	p_DataArray = new ElementType[p_maxSize];
 	p_length = 0;
 }
+SeqList::SeqList(const SeqList &seqList)
+{
+	p_maxSize = seqList.p_maxSize;
+	p_length = seqList.p_length;
+
+	p_DataArray = new ElementType[p_maxSize];
+
+	for (int i = 0; i < p_length; i++) {
+		p_DataArray[i] = seqList.p_DataArray[i];
+	}
+}
 
 // 析构函数
 SeqList::~SeqList()
 {
 	delete[] p_DataArray;
-	p_DataArray = nullptr;
 }
 
 // 判断是否为空操作

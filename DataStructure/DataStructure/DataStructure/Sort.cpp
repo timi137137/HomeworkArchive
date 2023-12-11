@@ -74,7 +74,52 @@ status InsertionSort(SeqList& seqList) {
 	return OK;
 }
 
-status QuickSort(SeqList& seqList) {
+/* 选取三个元素的中位数 */
+int getMedian(SeqList& seqList, int left, int mid, int right) {
+	// 此处使用异或运算来简化代码
+	if ((seqList.getElement(left) < seqList.getElement(mid)) ^ (seqList.getElement(left) < seqList.getElement(right))) return left;
+	else if ((seqList.getElement(mid) < seqList.getElement(left)) ^ (seqList.getElement(mid) < seqList.getElement(right))) return mid;
+	else return right;
+}
+/* 哨兵划分（三数取中值） */
+int partition(SeqList& seqList, int left, int right) {
+	// 选取三个候选元素的中位数
+	int median = getMedian(seqList, left, (left + right) / 2, right);
+	// 中位数放到最左边
+	seqList.swapElement(left, median);
+	// 以左指针为基准数
+	int i = left, j = right;
+
+	while (i < j) {
+		while (i < j && seqList.getElement(j) >= seqList.getElement(left)) {
+			j--; // 从右向左找首个小于基准数的元素
+		}
+			
+		while (i < j && seqList.getElement(i) <= seqList.getElement(left)) {
+			i++; // 从左向右找首个大于基准数的元素
+		}
+
+		seqList.swapElement(i, j);
+	}
+
+	seqList.swapElement(i, left);// 交换分界线
+	return i;            // 返回基准数的索引
+}
+status QuickSort(SeqList& seqList, int left, int right) {
+	// 数组长度为 1 时终止
+	while (left < right) {
+		// 哨兵划分操作
+		int pivot = partition(seqList, left, right);
+		// 对两个子数组中较短的那个执行快速排序
+		if (pivot - left < right - pivot) {
+			QuickSort(seqList, left, pivot - 1); // 递归排序左子数组
+			left = pivot + 1;                 // 剩余未排序区间为 [pivot + 1, right]
+		}
+		else {
+			QuickSort(seqList, pivot + 1, right); // 递归排序右子数组
+			right = pivot - 1;                 // 剩余未排序区间为 [left, pivot - 1]
+		}
+	}
 	return OK;
 }
 
@@ -99,25 +144,41 @@ int main() {
 	CreateSeqList(seqList, Maxsize);
 	system("cls");
 
+	cout << "原始输入顺序表:" << endl;
 	seqList.printList();
 	cout << endl;
 
+	SeqList seqList1(seqList);
 	QueryPerformanceFrequency(&tc);
 	QueryPerformanceCounter(&t1);
-	SelectionSort(seqList);
+	SelectionSort(seqList1);
 	QueryPerformanceCounter(&t2);
 	cout << "各类排序所用耗时(uS)" << endl;
 	cout << "选择排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
-	seqList.printList();
+	seqList1.printList();
 	cout << endl;
 
+	SeqList seqList2(seqList);
 	QueryPerformanceCounter(&t1);
-	BubbleSort(seqList);
+	BubbleSort(seqList2);
 	QueryPerformanceCounter(&t2);
 	cout << "各类排序所用耗时(uS)" << endl;
 	cout << "冒泡排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
-	seqList.printList();
+	seqList2.printList();
 	cout << endl;
+
+	SeqList seqList3(seqList);
+	QueryPerformanceCounter(&t1);
+	QuickSort(seqList3, 0, seqList3.getLength());
+	QueryPerformanceCounter(&t2);
+	cout << "各类排序所用耗时(uS)" << endl;
+	cout << "快速排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
+	seqList3.printList();
+	cout << endl;
+
+	delete &seqList1;
+	delete &seqList2;
+	delete &seqList3;
 
 	system("pause");
 
