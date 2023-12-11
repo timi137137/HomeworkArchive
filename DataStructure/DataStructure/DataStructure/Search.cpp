@@ -85,7 +85,7 @@ int BinarySearch(SeqList& seqList, int element) {
 
 #pragma region -- Main --
 
-int main() {
+int main5() {
 	LinkList linkList;
 	int Maxsize, Length;
 	int input, result;

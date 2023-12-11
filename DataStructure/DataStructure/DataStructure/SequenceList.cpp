@@ -43,6 +43,21 @@ int SeqList::getElement(int index)
 	return p_DataArray[index];
 }
 
+// 交换元素操作
+bool SeqList::swapElement(int index1, int index2) {
+	try
+	{
+		ElementType temp = p_DataArray[index2];
+		p_DataArray[index2] = p_DataArray[index1];
+		p_DataArray[index1] = temp;
+		return true;
+	}
+	catch (const std::exception&)
+	{
+		return false;
+	}
+}
+
 // 新增元素操作
 bool SeqList::appendList(const ElementType element)
 {

@@ -134,6 +134,7 @@
     <ClCompile Include="Search.cpp" />
     <ClCompile Include="SequenceList.cpp" />
     <ClCompile Include="SequenceList.h" />
+    <ClCompile Include="Sort.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LinkList.h" />

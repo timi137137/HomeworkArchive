@@ -14,6 +14,7 @@
 		int getLength();
 		bool getElement(int index, ElementType* element);
 		int getElement(int index);
+		bool swapElement(int index1, int index2);
 		bool appendList(const ElementType element);
 		bool insertList(int index, const ElementType element);
 		bool deleteList(int index, ElementType* element);
