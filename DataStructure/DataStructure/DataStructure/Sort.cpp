@@ -107,17 +107,17 @@ int partition(SeqList& seqList, int left, int right) {
 }
 status QuickSort(SeqList& seqList, int left, int right) {
 	// 数组长度为 1 时终止
-	while (left < right) {
+	if (left < right) {
 		// 哨兵划分操作
 		int pivot = partition(seqList, left, right);
 		// 对两个子数组中较短的那个执行快速排序
 		if (pivot - left < right - pivot) {
 			QuickSort(seqList, left, pivot - 1); // 递归排序左子数组
-			left = pivot + 1;                 // 剩余未排序区间为 [pivot + 1, right]
+			QuickSort(seqList, pivot + 1, right); // 递归排序右子数组
 		}
 		else {
 			QuickSort(seqList, pivot + 1, right); // 递归排序右子数组
-			right = pivot - 1;                 // 剩余未排序区间为 [left, pivot - 1]
+			QuickSort(seqList, left, pivot - 1); // 递归排序左子数组
 		}
 	}
 	return OK;
@@ -169,16 +169,12 @@ int main() {
 
 	SeqList seqList3(seqList);
 	QueryPerformanceCounter(&t1);
-	QuickSort(seqList3, 0, seqList3.getLength());
+	QuickSort(seqList3, 0, seqList3.getLength() - 1);
 	QueryPerformanceCounter(&t2);
 	cout << "各类排序所用耗时(uS)" << endl;
 	cout << "快速排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
 	seqList3.printList();
 	cout << endl;
-
-	delete &seqList1;
-	delete &seqList2;
-	delete &seqList3;
 
 	system("pause");
 
