@@ -128,4 +128,14 @@ void SeqList::printList()
 	}
 	std::cout << "NULL" << std::endl;
 }
+void SeqList::printList(int limit)
+{
+	if (p_DataArray == nullptr || p_length == 0) return;
+
+	for (int index = 0; index < (p_length > limit ? limit : p_length); index++)
+	{
+		std::cout << p_DataArray[index] << " -> ";
+	}
+	std::cout << "LIMIT" << std::endl;
+}
 #pragma endregion

@@ -1,5 +1,8 @@
 #include <iostream>
 #include <iomanip>
+#include <map>
+#include <vector>
+#include <algorithm>
 #include <windows.h>
 #include "SequenceList.h"
 
@@ -71,6 +74,21 @@ status BubbleSort(SeqList& seqList) {
 }
 
 status InsertionSort(SeqList& seqList) {
+	for (int i = 1; i < seqList.getLength(); i++) {
+		ElementType key;
+		seqList.getElement(i, &key);
+
+		int j = i - 1;
+
+		while (j >= 0 && seqList.getElement(j) > key) {
+			ElementType element;
+			seqList.getElement(j, &element);
+			seqList.swapElement(j + 1, j);
+			j--;
+		}
+
+		seqList.insertList(j + 1, key);
+	}
 	return OK;
 }
 
@@ -123,8 +141,12 @@ status QuickSort(SeqList& seqList, int left, int right) {
 	return OK;
 }
 
-status MergeSort(SeqList& seqList) {
-	return OK;
+double calcTime(LARGE_INTEGER t1, LARGE_INTEGER t2, LARGE_INTEGER tc) {
+	return (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart;
+}
+bool compare(const pair<string, int>& v1, const pair<string, int>& v2)
+{
+	return v1.second < v2.second;
 }
 
 #pragma endregion
@@ -148,34 +170,57 @@ int main() {
 	seqList.printList();
 	cout << endl;
 
-	SeqList seqList1(seqList);
+	double sort0, sort1, sort2, sort3;
 	QueryPerformanceFrequency(&tc);
-	QueryPerformanceCounter(&t1);
-	SelectionSort(seqList1);
-	QueryPerformanceCounter(&t2);
-	cout << "各类排序所用耗时(uS)" << endl;
-	cout << "选择排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
-	seqList1.printList();
-	cout << endl;
 
-	SeqList seqList2(seqList);
-	QueryPerformanceCounter(&t1);
-	BubbleSort(seqList2);
-	QueryPerformanceCounter(&t2);
-	cout << "各类排序所用耗时(uS)" << endl;
-	cout << "冒泡排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
-	seqList2.printList();
-	cout << endl;
+	const char* names[] = { "插入", "选择", "冒泡", "快速" };
+	double times[4];
 
-	SeqList seqList3(seqList);
-	QueryPerformanceCounter(&t1);
-	QuickSort(seqList3, 0, seqList3.getLength() - 1);
-	QueryPerformanceCounter(&t2);
-	cout << "各类排序所用耗时(uS)" << endl;
-	cout << "快速排序: " << (t2.QuadPart - t1.QuadPart) * 1000000.0 / (double)tc.QuadPart << endl;
-	seqList3.printList();
-	cout << endl;
+	for (int i = 0; i < 4; i++)
+	{
+		SeqList seqList_temp(seqList);
+		QueryPerformanceCounter(&t1);
 
+		switch (i)
+		{
+		case 0:
+			InsertionSort(seqList_temp);
+			break;
+		case 1:
+			SelectionSort(seqList_temp);
+			break;
+		case 2:
+			BubbleSort(seqList_temp);
+			break;
+		case 3:
+			QuickSort(seqList_temp, 0, seqList_temp.getLength() - 1);
+			break;
+		default:
+			break;
+		}
+
+		QueryPerformanceCounter(&t2);
+		times[i] = calcTime(t1, t2, tc);
+		cout << names[i] << "排序所用耗时(uS): " << times[i] << endl;
+		seqList_temp.printList(15);
+		cout << endl;
+	}
+
+	map<string, int> sort_map;
+
+	for (int i = 0; i < 4; i++) {
+		sort_map.insert(pair<string, int>(names[i], times[i]));
+	}
+
+	vector<pair<string, int>> vector_map(sort_map.begin(), sort_map.end());
+	sort(vector_map.begin(), vector_map.end(), compare);
+
+	cout << "各类排序耗时比较(uS):" << endl;
+	for (auto item : vector_map)
+	{
+		cout << item.first << "排序" << " : " << item.second << " < ";
+	}
+	cout << "NULL" << endl;
 	system("pause");
 
 	return OK;

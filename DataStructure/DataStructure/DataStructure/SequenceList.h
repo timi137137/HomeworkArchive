@@ -20,6 +20,7 @@
 		bool insertList(int index, const ElementType element);
 		bool deleteList(int index, ElementType* element);
 		void printList();
+		void printList(int limit);
 
 	private:
 		ElementType* p_DataArray; // 指向存放顺序表元素的数组
