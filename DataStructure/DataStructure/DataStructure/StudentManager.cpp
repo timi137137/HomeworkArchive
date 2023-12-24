@@ -1,10 +1,9 @@
 #include <iostream>
 #include <fstream>
 #include <sstream>
-#include <string>
 #include <vector>
 #include <iomanip>
-#include "SequenceList.h"
+#include "SequenceList.cpp"
 
 using namespace std;
 
@@ -70,7 +69,7 @@ void addStudent(SeqList<Student>& list) {
 }
 
 void deleteStudent(SeqList<Student>& list) {
-	Student* student;
+	Student* student = new Student();
 	int position;
 
 	cout << "输入要移除的位置: ";
@@ -229,7 +228,7 @@ int main() {
 			cout << "不及格百分比: " << stats.failPercent << "%" << endl;
 			break;
 		case 6: {
-			char* nameToFind;
+			char* nameToFind{};
 			cout << "请输入要查找的学生姓名：";
 			cin >> nameToFind;
 			SearchResult result = findStudentByName(list, nameToFind);

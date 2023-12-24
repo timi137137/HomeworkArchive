@@ -7,7 +7,7 @@
 	class SeqList {
 	public:
 		SeqList(int size = 0);
-		SeqList(const SeqList &seqList);
+		SeqList(const SeqList<ElementType> &seqList);
 		~SeqList();
 
 		bool isEmpty();

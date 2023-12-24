@@ -1,4 +1,5 @@
 #include "SequenceList.h"
+#include <fstream>
 
 #pragma region -- Functions --
 // 构造函数
@@ -10,7 +11,7 @@ SeqList<ElementType>::SeqList(int size)
 	p_length = 0;
 }
 template <typename ElementType>
-SeqList<ElementType>::SeqList(const SeqList &seqList)
+SeqList<ElementType>::SeqList(const SeqList<ElementType> &seqList)
 {
 	p_maxSize = seqList.p_maxSize;
 	p_length = seqList.p_length;
@@ -55,7 +56,7 @@ bool SeqList<ElementType>::getElement(int index, ElementType* element)
 template <typename ElementType>
 ElementType SeqList<ElementType>::getElement(int index)
 {
-	if (p_length == 0 || index < 0 || index > p_length) return nullptr;
+	if (p_length == 0 || index < 0 || index > p_length) throw std::runtime_error("Invalid index or empty list");
 
 	return p_DataArray[index];
 }
@@ -156,29 +157,28 @@ void SeqList<ElementType>::printList(const char* filename)
 {
 	if (p_DataArray == nullptr || p_length == 0) return;
 
-	for (int index = 0; index < p_length; index++)
-	{
-		outputStructToFile(p_DataArray[index], filename);
-	}
-}
+	std::ofstream outputFile(filename);
 
-template <typename T, std::size_t... Is>
-void outputStructToFile(const T& obj, const std::string& filename, std::index_sequence<Is...>) {
-	std::ofstream file(filename, std::ios::app);
-
-	if (!file.is_open()) {
+	if (!outputFile.is_open()) {
 		std::cout << "无法打开数据文档，请检查路径或文档是否正确" << std::endl;
 		return;
 	}
 
-	((file << std::get<Is>(obj) << ' '), ...);
-	file << std::endl;
+	for (int i = 0; i < p_length; i++) {
+		outputElement(outputFile, p_DataArray[i]);
+	}
 
-	file.close();
+	outputFile.close();
 }
-template <typename T>
-void outputStructToFile(const T& obj, const std::string& filename) {
-	constexpr std::size_t size = std::tuple_size_v<decltype(obj)>;
-	outputStructToFile(obj, filename, std::make_index_sequence<size>());
+
+template<typename ElementType>
+typename std::enable_if<std::is_arithmetic<ElementType>::value, void>::type
+outputElement(std::ofstream& outputFile, const ElementType& element) {
+	outputFile << element << " -> ";
+}
+template<typename ElementType>
+typename std::enable_if<!std::is_arithmetic<ElementType>::value, void>::type
+outputElement(std::ofstream& outputFile, const ElementType& element) {
+	outputFile << element.id << " " << element.name << " " << element.score << std::endl;
 }
 #pragma endregion
