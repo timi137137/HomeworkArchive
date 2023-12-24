@@ -3,8 +3,7 @@
 #ifndef SEQLIST_H
 	#define SEQLIST_H
 
-	typedef int ElementType; // 数据类型
-
+	template <typename ElementType> //数据类型
 	class SeqList {
 	public:
 		SeqList(int size = 0);

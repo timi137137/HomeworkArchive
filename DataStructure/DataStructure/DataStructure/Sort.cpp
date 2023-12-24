@@ -153,7 +153,7 @@ bool compare(const pair<string, int>& v1, const pair<string, int>& v2)
 
 #pragma region -- Main --
 
-int main() {
+int main5() {
 	int Maxsize, Length;
 	int input, result;
 
