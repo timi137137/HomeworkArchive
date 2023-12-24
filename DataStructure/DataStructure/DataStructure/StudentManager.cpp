@@ -3,6 +3,7 @@
 #include <sstream>
 #include <vector>
 #include <iomanip>
+#include <string>
 #include "SequenceList.cpp"
 
 using namespace std;
@@ -142,7 +143,7 @@ ScoreStatistics calcScoreStatistics(SeqList<Student>& list) {
 	return stats;
 }
 
-SearchResult findStudentByName(SeqList<Student>& list, const char* name) {
+SearchResult findStudentByName(SeqList<Student>& list, const string name) {
 	SearchResult result = { false, "", 0 };
 	for (int i = 0; i < list.getLength(); ++i) {
 		if (name == list.getElement(i).name) {
@@ -228,7 +229,7 @@ int main() {
 			cout << "不及格百分比: " << stats.failPercent << "%" << endl;
 			break;
 		case 6: {
-			char* nameToFind{};
+			string nameToFind{};
 			cout << "请输入要查找的学生姓名：";
 			cin >> nameToFind;
 			SearchResult result = findStudentByName(list, nameToFind);
