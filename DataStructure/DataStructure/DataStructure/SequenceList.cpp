@@ -53,9 +53,9 @@ bool SeqList<ElementType>::getElement(int index, ElementType* element)
 	return true;
 }
 template <typename ElementType>
-int SeqList<ElementType>::getElement(int index)
+ElementType SeqList<ElementType>::getElement(int index)
 {
-	if (p_length == 0 || index < 0 || index > p_length) return -1;
+	if (p_length == 0 || index < 0 || index > p_length) return nullptr;
 
 	return p_DataArray[index];
 }
@@ -150,5 +150,35 @@ void SeqList<ElementType>::printList(int limit)
 		std::cout << p_DataArray[index] << " -> ";
 	}
 	std::cout << "LIMIT" << std::endl;
+}
+template <typename ElementType>
+void SeqList<ElementType>::printList(const char* filename)
+{
+	if (p_DataArray == nullptr || p_length == 0) return;
+
+	for (int index = 0; index < p_length; index++)
+	{
+		outputStructToFile(p_DataArray[index], filename);
+	}
+}
+
+template <typename T, std::size_t... Is>
+void outputStructToFile(const T& obj, const std::string& filename, std::index_sequence<Is...>) {
+	std::ofstream file(filename, std::ios::app);
+
+	if (!file.is_open()) {
+		std::cout << "无法打开数据文档，请检查路径或文档是否正确" << std::endl;
+		return;
+	}
+
+	((file << std::get<Is>(obj) << ' '), ...);
+	file << std::endl;
+
+	file.close();
+}
+template <typename T>
+void outputStructToFile(const T& obj, const std::string& filename) {
+	constexpr std::size_t size = std::tuple_size_v<decltype(obj)>;
+	outputStructToFile(obj, filename, std::make_index_sequence<size>());
 }
 #pragma endregion

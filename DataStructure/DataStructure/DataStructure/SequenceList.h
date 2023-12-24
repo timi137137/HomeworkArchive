@@ -13,13 +13,14 @@
 		bool isEmpty();
 		int getLength();
 		bool getElement(int index, ElementType* element);
-		int getElement(int index);
+		ElementType getElement(int index);
 		bool swapElement(int index1, int index2);
 		bool appendList(const ElementType element);
 		bool insertList(int index, const ElementType element);
 		bool deleteList(int index, ElementType* element);
 		void printList();
 		void printList(int limit);
+		void printList(const char* filename);
 
 	private:
 		ElementType* p_DataArray; // 指向存放顺序表元素的数组

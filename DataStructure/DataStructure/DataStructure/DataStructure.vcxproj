@@ -135,11 +135,16 @@
     <ClCompile Include="SequenceList.cpp" />
     <ClCompile Include="SequenceList.h" />
     <ClCompile Include="Sort.cpp" />
+    <ClCompile Include="StudentManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="LinkList.h" />
   </ItemGroup>
+  <ItemGroup>
+    <Text Include="data.txt">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+    </Text>
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
-  <ImportGroup Label="ExtensionTargets">
-  </ImportGroup>
+  <ImportGroup Label="ExtensionTargets" />
 </Project>
